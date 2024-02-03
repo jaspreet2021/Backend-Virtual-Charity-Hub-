@@ -3,4 +3,6 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^register$ register.php [QSA,L]
+    RewriteRule ^charityCreate$ charityCreate.php [QSA,L]
+
 </IfModule>
