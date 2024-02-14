@@ -83,6 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Send a JSON response
     header("Content-Type: application/json");
+    header("Access-Control-Allow-Origin: http://localhost:4200");
 
     if ($registrationResult) {
         echo json_encode(array("success" => true, "message" => "Registration successful"));
@@ -92,6 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 } else {
     // Send an error response if the request method is not POST
     header("Content-Type: application/json");
+    header("Access-Control-Allow-Origin: http://localhost:4200");
     echo json_encode(array("success" => false, "message" => "Invalid request method"));
 }
 

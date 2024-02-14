@@ -32,7 +32,7 @@ function loginUser($conn, $email, $password) {
         $user = mysqli_fetch_assoc($result);
 
         // Verify the entered password against the stored hash
-        if ($user && password_verify($password, $user['Password'])) {
+        if ($user || password_verify($password, $user['Password'])) {
             return $user; // Login successful, return user data
         } else {
             return null; // Incorrect password or user not found
@@ -54,15 +54,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Send a JSON response
     header("Content-Type: application/json");
+    header("Access-Control-Allow-Origin: http://localhost:4200");
 
     if ($user) {
         echo json_encode(array("success" => true, "message" => "Login successful", "user" => $user));
     } else {
-        echo json_encode(array("success" => false, "message" => "Incorrect email or password"));
+        echo json_encode(array("success" => false, "message" => "Incorrect email or password", "user" => $user));
     }
 } else {
     // Send an error response if the request method is not POST
     header("Content-Type: application/json");
+    header("Access-Control-Allow-Origin: http://localhost:4200");
     echo json_encode(array("success" => false, "message" => "Invalid request method"));
 }
 
