@@ -6,6 +6,14 @@
     RewriteRule ^charityCreate$ charityCreate.php [QSA,L]
     RewriteRule ^charities$ charities.php [QSA,L]
     RewriteRule ^login$ login.php [QSA,L]
+    RewriteRule ^campaignCreate$ campaignCreate.php [QSA,L]
+    RewriteRule ^campaigns$ campaigns.php [QSA,L]
+    RewriteRule ^campaignDelete$ campaignDelete.php [QSA,L]
+    RewriteRule ^campaignUpdate$ campaignUpdate.php [QSA,L]
+
+
+
+
 
 
 
