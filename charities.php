@@ -23,14 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $charities = array();
 
         while ($row = $result->fetch_assoc()) {
-            $charities[] = $row;
+            $charities = $row;
         }
-
-        echo json_encode(['charities' => $charities]);
+        header("Access-Control-Allow-Origin: http://localhost:4200");
+        echo json_encode([$charities]);
     } else {
-        echo json_encode(['charities' => []]);
+        header("Access-Control-Allow-Origin: http://localhost:4200");
+        echo json_encode([[]]);
     }
 } else {
+    header("Access-Control-Allow-Origin: http://localhost:4200");
     echo json_encode(['error' => 'Invalid request']);
 }
 
