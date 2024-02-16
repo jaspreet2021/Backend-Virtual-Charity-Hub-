@@ -74,7 +74,7 @@ if (mysqli_num_rows($resultCheckTableItems) > 0) {
         CREATE TABLE IF NOT EXISTS charities(
             CharityId INT AUTO_INCREMENT PRIMARY KEY,
             CharityName VARCHAR(45),
-            CharityDescription VARCHAR(45),
+            CharityDescription TEXT,
             CharityImageUrl VARCHAR(45),
             DocumentUrl VARCHAR(45),
             IsApproved TINYINT,
@@ -134,7 +134,7 @@ if (mysqli_num_rows($resultCheckTableCampaigns) > 0) {
         CREATE TABLE IF NOT EXISTS campaigns (
             CampaignId INT AUTO_INCREMENT PRIMARY KEY,
             CampaignName VARCHAR(45),
-            CampaignDescription VARCHAR(100),
+            CampaignDescription TEXT,
             CampaignImageUrl VARCHAR(100),
             CampaignAmount INT,
             IsApproved TINYINT,
