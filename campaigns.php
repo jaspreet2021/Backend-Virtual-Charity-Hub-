@@ -24,16 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $campaigns = array();
         // Fetch campaigns and store them in an array
         while ($row = $result->fetch_assoc()) {
-            $campaigns[] = $row;
+            $campaigns = $row;
         }
         header("Access-Control-Allow-Origin: http://localhost:4200");
 
-        echo json_encode([$campaigns]);
+        echo json_encode($campaigns);
     } else {
         // If no campaigns found, return an empty array
         header("Access-Control-Allow-Origin: http://localhost:4200");
 
-        echo json_encode([[]]);
+        echo json_encode([]);
     }
 } else {
     header("Access-Control-Allow-Origin: http://localhost:4200");
