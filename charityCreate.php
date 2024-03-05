@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['CharityName'], $_POST
     $charityDescription = $_POST['CharityDescription'];
     $charityLocation = $_POST['CharityLocation'];
     $userId = $_POST['UserId'];
-    $isApproved = isset($_POST['IsApproved']) ? $_POST['IsApproved'] : 0;
+    $Status = isset($_POST['Status']) ? $_POST['Status'] : 0;
 
 
     // File uploads
@@ -38,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['CharityName'], $_POST
     move_uploaded_file($charityDocument['tmp_name'], $charityDocumentName);
 
     // Insert charity into the database
-    $sql = "INSERT INTO charities (CharityName, CharityDescription, CharityImageUrl, DocumentUrl, isApproved, CharityLocation, UserId)
-            VALUES ('$charityName', '$charityDescription', '$charityImageName', '$charityDocumentName', '$isApproved','$charityLocation', $userId)";
+    $sql = "INSERT INTO charities (CharityName, CharityDescription, CharityImageUrl, DocumentUrl, Status , CharityLocation, UserId)
+            VALUES ('$charityName', '$charityDescription', '$charityImageName', '$charityDocumentName', '$Status','$charityLocation', $userId)";
 
     if ($conn->query($sql) === TRUE) {
         $charityId = $conn->insert_id;

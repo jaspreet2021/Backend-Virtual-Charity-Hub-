@@ -15,16 +15,16 @@ if ($conn->connect_error) {
 }
 
 // API endpoint to delete a campaign
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['campaignId'])) {
-    $campaignId = $_POST['campaignId'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['CharityId'])) {
+    $charityId = $_POST['CharityId'];
 
     // Delete campaign from the database
-    $sql = "Update campaigns SET IsDeleted=1 WHERE CampaignId = $campaignId";
+    $sql = "Update charities SET IsDeleted=1 WHERE CharityId = $charityId";
 
     if ($conn->query($sql) === TRUE) {
-        echo json_encode(['message' => 'Campaign deleted successfully']);
+        echo json_encode(['message' => 'Charity deleted successfully']);
     } else {
-        echo json_encode(['error' => 'Error deleting campaign: ' . $conn->error]);
+        echo json_encode(['error' => 'Error deleting Charity: ' . $conn->error]);
     }
 } else {
     echo json_encode(['error' => 'Invalid request']);

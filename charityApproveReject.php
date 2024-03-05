@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['charityId'], $_POST['
     $action = $_POST['action']; // 'approve' or 'reject'
 
     // Update charity status in the database
-    $sql = "UPDATE charities SET IsApproved = " . ($action === 'approve' ? '1' : '2') . " WHERE CharityId = $charityId";
+    $sql = "UPDATE charities SET Status = " . ($action === 'approve' ? '1' : '2') . " WHERE CharityId = $charityId";
 
     if ($conn->query($sql) === TRUE) {
         header("Content-Type: application/json");
