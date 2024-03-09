@@ -13,6 +13,10 @@
     RewriteRule ^campaignDelete$ campaignDelete.php [QSA,L]
     RewriteRule ^campaignUpdate$ campaignUpdate.php [QSA,L]
     RewriteRule ^charityApproveReject$ charityApproveReject.php [QSA,L]
+    RewriteRule ^charitySuspend$ suspendcharity.php [QSA,L]
+    RewriteRule ^campaignSuspend$ suspendCampaign.php [QSA,L]
+
+
 
     
 
