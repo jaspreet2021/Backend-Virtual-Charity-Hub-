@@ -18,7 +18,7 @@ if ($conn->connect_error) {
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // Initialize the SQL query
-    $sql = "SELECT * FROM campaigns WHERE 1=1";
+    $sql = "SELECT * FROM campaigns WHERE Isdeleted = 0";
 
     // Check if status parameter is provided
     if(isset($_GET['status'])) {

@@ -14,13 +14,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// API endpoint to approve or reject a charity
+// API endpoint to approve or reject a campaign
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['campaignId'], $_POST['action'])) {
     $campaignId = $_POST['campaignId'];
-    $action = $_POST['action']; // suspend
+    $action = $_POST['action']; // 'approve' or 'reject'
 
-    // Update charity status in the database
-    $sql = "UPDATE campaigns SET Status = " . ($action === 'suspend' ? '3' : '1') . " WHERE CampaignId = $campaignId";
+    // Update campaignId status in the database
+    $sql = "UPDATE campaigns SET Status = " . ($action === 'approve' ? '1' : '2') . " WHERE CampaignId = $campaignId";
 
     if ($conn->query($sql) === TRUE) {
         header("Content-Type: application/json");
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['campaignId'], $_POST[
         header("Content-Type: application/json");
         header("Access-Control-Allow-Origin: http://localhost:4200");
     
-        echo json_encode(['error' => 'Error updating charity status: ' . $conn->error]);
+        echo json_encode(['error' => 'Error updating campaign status: ' . $conn->error]);
     }
 } else {
     header("Content-Type: application/json");

@@ -15,6 +15,7 @@
     RewriteRule ^charityApproveReject$ charityApproveReject.php [QSA,L]
     RewriteRule ^charitySuspend$ suspendcharity.php [QSA,L]
     RewriteRule ^campaignSuspend$ suspendCampaign.php [QSA,L]
+    RewriteRule ^campaignSuspend$ campaignApproveReject.php [QSA,L]
 
 
 
