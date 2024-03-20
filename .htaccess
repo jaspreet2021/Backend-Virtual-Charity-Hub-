@@ -16,6 +16,10 @@
     RewriteRule ^charitySuspend$ suspendcharity.php [QSA,L]
     RewriteRule ^campaignSuspend$ suspendCampaign.php [QSA,L]
     RewriteRule ^campaignSuspend$ campaignApproveReject.php [QSA,L]
+    RewriteRule ^donate$ CreateDonation.php [QSA,L]
+    RewriteRule ^donationList$ donationsList.php [QSA,L]
+
+
 
 
 

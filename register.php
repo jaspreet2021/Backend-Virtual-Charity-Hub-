@@ -135,8 +135,8 @@ function registerUser($conn, $name, $email, $password, $phone, $role) {
          sendVerificationEmail($email, $token, $lastInsertedId,$conn);
     
 
-        return true; // Registration successful
-    } else {
+         return $lastInsertedId; // Return the user ID
+        } else {
         return false; // Registration failed
     }
 }
@@ -161,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     header("Access-Control-Allow-Origin: http://localhost:4200");
 
     if ($registrationResult) {
-        echo json_encode(array("success" => true, "message" => "Registration successful"));
+        echo json_encode(array("success" => true, "message" => "Registration successful", "userId" => $registrationResult));
     } else {
         echo json_encode(array("success" => false, "message" => "Registration failed"));
     }
