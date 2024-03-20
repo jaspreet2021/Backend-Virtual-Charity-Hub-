@@ -17,10 +17,10 @@ if ($conn->connect_error) {
 // API endpoint to approve or reject a charity
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['charityId'], $_POST['action'])) {
     $charityId = $_POST['charityId'];
-    $action = $_POST['action']; // 'approve' or 'reject'
+    $action = $_POST['action']; // suspend
 
     // Update charity status in the database
-    $sql = "UPDATE charities SET Status = " . ($action === 'approve' ? '1' : '2') . " WHERE CharityId = $charityId";
+    $sql = "UPDATE charities SET Status = " . ($action === 'suspend' ? '3' : '1') . " WHERE CharityId = $charityId";
 
     if ($conn->query($sql) === TRUE) {
         header("Content-Type: application/json");

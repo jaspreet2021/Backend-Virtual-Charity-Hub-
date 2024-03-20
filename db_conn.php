@@ -75,9 +75,10 @@ if (mysqli_num_rows($resultCheckTableItems) > 0) {
             CharityId INT AUTO_INCREMENT PRIMARY KEY,
             CharityName VARCHAR(45),
             CharityDescription TEXT,
-            CharityImageUrl VARCHAR(45),
-            DocumentUrl VARCHAR(45),
-            IsApproved TINYINT,
+            CharityImageUrl TEXT,
+            DocumentUrl TEXT,
+            Status TINYINT,
+            IsDeleted TINYINT DEFAULT 0,
             CharityLocation VARCHAR(45),
             UserId Int,
             FOREIGN KEY (UserId) REFERENCES users(Id)
@@ -135,9 +136,10 @@ if (mysqli_num_rows($resultCheckTableCampaigns) > 0) {
             CampaignId INT AUTO_INCREMENT PRIMARY KEY,
             CampaignName VARCHAR(45),
             CampaignDescription TEXT,
-            CampaignImageUrl VARCHAR(100),
+            CampaignImageUrl TEXT,
             CampaignAmount INT,
-            IsApproved TINYINT,
+            Status TINYINT,
+            IsDeleted TINYINT DEFAULT 0,
             CharityId INT,
             FOREIGN KEY (CharityId) REFERENCES charities(CharityId)
 

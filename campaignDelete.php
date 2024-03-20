@@ -19,15 +19,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['campaignId'])) {
     $campaignId = $_POST['campaignId'];
 
     // Delete campaign from the database
-    $sql = "DELETE FROM campaigns WHERE CampaignId = $campaignId";
+    $sql = "Update campaigns SET IsDeleted=1 WHERE CampaignId = $campaignId";
 
     if ($conn->query($sql) === TRUE) {
+        header("Access-Control-Allow-Origin: http://localhost:4200");
         echo json_encode(['message' => 'Campaign deleted successfully']);
     } else {
+        header("Access-Control-Allow-Origin: http://localhost:4200");
         echo json_encode(['error' => 'Error deleting campaign: ' . $conn->error]);
     }
 } else {
-    echo json_encode(['error' => 'Invalid request']);
+        header("Access-Control-Allow-Origin: http://localhost:4200");
+        echo json_encode(['error' => 'Invalid request']);
 }
 
 // Close the connection

@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['CampaignName'], $_POS
     $campaignName = $_POST['CampaignName'];
     $campaignDescription = $_POST['CampaignDescription'];
     $campaignAmount = $_POST['CampaignAmount'];
-    $isApproved = isset($_POST['IsApproved']) ? $_POST['IsApproved'] : 0;
+    $Status = isset($_POST['Status']) ? $_POST['Status'] : 0;
     $charityId = $_POST['CharityId'];
 
     // File uploads
@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['CampaignName'], $_POS
 
     if (move_uploaded_file($campaignImage['tmp_name'], $campaignImageUrl)) {
         // Insert campaign into the database
-        $sql = "INSERT INTO campaigns (CampaignName, CampaignDescription, CampaignImageUrl, CampaignAmount, IsApproved, CharityId)
-            VALUES ('$campaignName', '$campaignDescription', '$campaignImageUrl', $campaignAmount, $isApproved, $charityId)";
+        $sql = "INSERT INTO campaigns (CampaignName, CampaignDescription, CampaignImageUrl, CampaignAmount, Status , CharityId)
+            VALUES ('$campaignName', '$campaignDescription', '$campaignImageUrl', $campaignAmount, $Status, $charityId)";
 
         if ($conn->query($sql) === TRUE) {
             $campaignId = $conn->insert_id;
