@@ -1,5 +1,77 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require 'PHPMailer-master/src/Exception.php';
+require 'PHPMailer-master/src/PHPMailer.php';
+require 'PHPMailer-master/src/SMTP.php';
 
+// Connect to the database
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "virtual_charity_hub";
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+function sendVerificationEmail($email, $token, $lastInsertedId,$conn) {
+    // Create a new PHPMailer instance
+    $mail = new PHPMailer();
+    $mail->IsSMTP();
+    $mail->Mailer = "smtp";
+    $mail->SMTPDebug  = 0;  
+    $mail->SMTPAuth   = TRUE;
+    $mail->SMTPSecure = "tls";
+    $mail->Port       = 587;
+    $mail->Host       = "smtp.gmail.com";
+    $mail->Username   = "virtualcharityhub@gmail.com";
+    $mail->Password   = "mtqy bnkg elsb tcer"; 
+
+    // Set email content and headers
+    $mail->IsHTML(true);
+    $mail->AddAddress($email);
+    $mail->SetFrom("virtualcharityhub@gmail.com", "Virtual Charity Hub");
+    $mail->Subject = "Email Verification for Virtual Charity Hub";
+    $mail->Body = getEmailContent($conn, $lastInsertedId, $token);
+
+    // Send the email
+    if (!$mail->send()) {
+        // Handle email sending failure
+        return false;
+    } else {
+        // Email sent successfully
+        return true;
+    }
+}
+function getEmailContent($conn, $lastInsertedId, $token) {
+    // Load the HTML template
+    $template = file_get_contents('email_template.html');
+    
+    // Query to fetch the user's name from the database
+    $sql = "SELECT Name FROM users WHERE Id = $lastInsertedId";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $name = $row['Name'];
+    } else {
+        // Default name if user not found or query fails
+        $name = "User";
+    }
+
+    // Replace placeholders with actual values
+    $template = str_replace('[User]', $name, $template);
+    $verificationLink = "http://localhost/virtual_charity_hub/verification.php?id=$lastInsertedId&code=$token";
+    $template = str_replace('[VerificationLink]', $verificationLink, $template);
+
+    return $template;
+}
+
+
+ 
 // Function to sanitize and validate input data
 function sanitizeInput($data) {
     $data = trim($data);
@@ -13,13 +85,9 @@ function hashPassword($password) {
     return password_hash($password, PASSWORD_DEFAULT);
 }
 
-// Connect to the database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "virtual_charity_hub";
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);
+
 
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
@@ -35,6 +103,7 @@ function registerUser($conn, $name, $email, $password, $phone, $role) {
     $password = sanitizeInput($password);
     $phone = sanitizeInput($phone);
     $role = sanitizeInput($role);
+
 
     // Check if the email already exists
     $sqlchk = "SELECT COUNT(*) as count FROM users WHERE Email = '$email'";
@@ -54,12 +123,18 @@ function registerUser($conn, $name, $email, $password, $phone, $role) {
 
     // Hash the password
     $hashedPassword = hashPassword($password);
+    $token=substr(md5(mt_rand()),0,15);
 
     // Insert user data into the 'users' table
     $sql = "INSERT INTO users (Name, Email, Password, Phone, Role, EmailVerified, EmailAuthToken) 
-            VALUES ('$name', '$email', '$hashedPassword', '$phone', '$role', 0, '')";
+            VALUES ('$name', '$email', '$hashedPassword', '$phone', '$role', 0, '$token')";
 
     if (mysqli_query($conn, $sql)) {
+        $lastInsertedId = mysqli_insert_id($conn);
+
+         sendVerificationEmail($email, $token, $lastInsertedId,$conn);
+    
+
         return true; // Registration successful
     } else {
         return false; // Registration failed
