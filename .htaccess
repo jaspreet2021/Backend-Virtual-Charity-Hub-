@@ -18,6 +18,10 @@
     RewriteRule ^campaignSuspend$ campaignApproveReject.php [QSA,L]
     RewriteRule ^donate$ CreateDonation.php [QSA,L]
     RewriteRule ^donationList$ donationsList.php [QSA,L]
+    RewriteRule ^users$ users.php [QSA,L]
+    RewriteRule ^userUpdate$ userUpdate.php [QSA,L]
+
+
 
 
 

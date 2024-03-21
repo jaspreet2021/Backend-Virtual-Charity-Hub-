@@ -85,7 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $campaignId = isset($_POST["campaignId"]) ? $_POST["campaignId"] :NULL;
     $amount = $_POST["amount"];
     $IsSuccess = $_POST["IsSuccess"];
-var_dump($charityId);    // Call the createDonation function
     $creationResult = createDonation($donorId, $charityId,$campaignId, $amount, $IsSuccess);
 
     // Send a JSON response
