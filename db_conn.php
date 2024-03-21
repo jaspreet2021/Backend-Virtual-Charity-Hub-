@@ -106,12 +106,15 @@ if (mysqli_num_rows($resultCheckTableDonations) > 0) {
         CREATE TABLE IF NOT EXISTS donations (
             DonationId INT AUTO_INCREMENT PRIMARY KEY,
             DonorId INT,
-            CharityId INT,
+            CharityId INT NULL,
+            CampaignId INT NULL,
             Amount INT,
             PaymentDate DATE,
             IsSuccess TINYINT,
             FOREIGN KEY (DonorId) REFERENCES users(Id),
             FOREIGN KEY (CharityId) REFERENCES charities(CharityId)
+            FOREIGN KEY (CampaignId) REFERENCES campaigns(CampaignId)
+
         )
     ";
 

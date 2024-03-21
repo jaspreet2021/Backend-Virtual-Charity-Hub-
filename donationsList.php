@@ -48,6 +48,8 @@ if (isset($_GET['donorId'])) {
 
     // Get donations for the specified donor ID
     $donations = getDonationsByDonor($donorId);
+    header("Content-Type: application/json");
+    header("Access-Control-Allow-Origin: http://localhost:4200");
 
     // Check if donations are found for the donor
     if ($donations !== null) {
@@ -58,6 +60,9 @@ if (isset($_GET['donorId'])) {
         echo json_encode(array("message" => "No donations found for the donor with ID: $donorId"));
     }
 } else {
+    header("Content-Type: application/json");
+    header("Access-Control-Allow-Origin: http://localhost:4200");
+
     // Donor ID not provided in the request
     echo json_encode(array("message" => "Please provide the donor ID"));
 }

@@ -8,7 +8,7 @@ require 'PHPMailer-master/src/SMTP.php';
 
 // Connect to the database
 // Function to create a donation
-function createDonation($donorId, $charityId, $amount, $IsSuccess) {
+function createDonation($donorId, $charityId, $campaignId,$amount, $IsSuccess) {
     // Connect to your database
     $servername = "localhost";
 $username = "root";
@@ -21,23 +21,23 @@ $dbname = "virtual_charity_hub";
         die("Connection failed: " . mysqli_connect_error());
     }
     $donorEmail = "";
-    $sql = "SELECT Email FROM users WHERE Id = $donorId";
+    $sql = "SELECT Name,Email FROM users WHERE Id = $donorId";
     $result = mysqli_query($conn, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
         $donorEmail = $row['Email'];
+        $donorName=$row['Name'];
     }
     $paymentDate = date("Y-m-d H:i:s"); // Format: YYYY-MM-DD HH:MM:SS
 
     // Prepare the SQL statement
-    $sql = "INSERT INTO donations (DonorId, CharityId, Amount, PaymentDate, IsSuccess) 
-            VALUES ('$donorId', '$charityId', '$amount', '$paymentDate', 1)";
-
+    $sql = "INSERT INTO donations (DonorId, CharityId,CampaignId, Amount, PaymentDate, IsSuccess) 
+            VALUES ('$donorId', '$charityId','$campaignId', '$amount', '$paymentDate', 1)";
     // Execute the SQL statement
     if (mysqli_query($conn, $sql)) {
         mysqli_close($conn);
-        sendDonationNotificationEmail($donorEmail,$donorId, $charityId, $amount, $paymentDate); // Send email notification
+        sendDonationNotificationEmail($donorEmail,$donorName,$donorId, $charityId, $campaignId, $amount, $paymentDate); // Send email notification
         return true; // Donation created successfully
     } else {
         mysqli_close($conn);
@@ -46,7 +46,7 @@ $dbname = "virtual_charity_hub";
 }
 
 // Function to send donation notification email
-function sendDonationNotificationEmail($donorEmail,$donorId, $charityId, $amount, $paymentDate) {
+function sendDonationNotificationEmail($donorEmail,$donorName,$donorId, $charityId,$campaignId, $amount, $paymentDate) {
     // Create a new PHPMailer instance
     $mail = new PHPMailer();
     $mail->IsSMTP();
@@ -65,8 +65,13 @@ function sendDonationNotificationEmail($donorEmail,$donorId, $charityId, $amount
     $mail->IsHTML(true);
     $mail->AddAddress($donorEmail);
     $mail->SetFrom("virtualcharityhub@gmail.com", "Virtual Charity Hub");
-    $mail->Subject = "Email Verification for Virtual Charity Hub";  $mail->Subject = "New Donation Received";
-    $mail->Body = "A new donation has been received!\n\nDonor ID: $donorId\nCharity ID: $charityId\nAmount: $amount\nPayment Date: $paymentDate";
+    $mail->Subject = "New Donation Received";
+    $mail->Body = "Dear $donorName,<br><br>"
+                . "We are incredibly grateful for your generous donation of $ $amount. Your support means the world to us and plays a crucial role in our mission."
+                . "Your kindness and compassion inspire us every day, and we are honored to have you as a supporter of our cause. Together, we are making a difference and bringing hope to those in need.<br><br>"
+                . "Thank you once again for your generosity and for believing in our mission. Your donation will help us create a brighter future for all.<br><br>"
+                . "With heartfelt gratitude,<br>"
+                . "Virtual Charity Hub";
 
     // Send the email
     $mail->send();
@@ -76,15 +81,16 @@ function sendDonationNotificationEmail($donorEmail,$donorId, $charityId, $amount
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Get data from the request
     $donorId = $_POST["donorId"];
-    $charityId = $_POST["charityId"];
+    $charityId = isset($_POST["charityId"]) ? $_POST["charityId"] :NULL;
+    $campaignId = isset($_POST["campaignId"]) ? $_POST["campaignId"] :NULL;
     $amount = $_POST["amount"];
     $IsSuccess = $_POST["IsSuccess"];
-
-    // Call the createDonation function
-    $creationResult = createDonation($donorId, $charityId, $amount, $IsSuccess);
+var_dump($charityId);    // Call the createDonation function
+    $creationResult = createDonation($donorId, $charityId,$campaignId, $amount, $IsSuccess);
 
     // Send a JSON response
     header("Content-Type: application/json");
+    header("Access-Control-Allow-Origin: http://localhost:4200");
 
     if ($creationResult) {
         echo json_encode(array("success" => true, "message" => "Donation created successfully"));
@@ -94,6 +100,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 } else {
     // Send an error response if the request method is not POST
     header("Content-Type: application/json");
+    header("Access-Control-Allow-Origin: http://localhost:4200");
+
     echo json_encode(array("success" => false, "message" => "Invalid request method"));
 }
 ?>
