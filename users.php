@@ -67,6 +67,12 @@ function deleteUserById($conn, $userId)
      }
 }
 
+if ($_SERVER["REQUEST_METHOD"] === 'OPTIONS') {
+    header('HTTP/1.1 200 OK');
+    header("Access-Control-Allow-Origin: http://localhost:4200");
+    header("Access-Control-Allow-Methods: *");
+    // exit();
+} 
 // Handle CRUD operations based on request method and parameters
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Create new user
@@ -115,17 +121,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 } elseif ($_SERVER["REQUEST_METHOD"] === "DELETE") {
     // Delete user
-    $userId = $_GET["id"];
+    header("Content-Type: application/json");
+    header("Access-Control-Allow-Origin: http://localhost:4200");
+    $userId = $_GET["id"];    
     $result = deleteUserById($conn, $userId);
 
     if ($result) {
-        header("Content-Type: application/json");
-        header("Access-Control-Allow-Origin: http://localhost:4200");
-
+       
         echo json_encode(array("success" => true, "message" => "User deleted successfully"));
-    } else {
-        header("Content-Type: application/json");
-        header("Access-Control-Allow-Origin: http://localhost:4200");
+    } else {      
 
         echo json_encode(array("success" => false, "message" => "User deletion failed"));
     }

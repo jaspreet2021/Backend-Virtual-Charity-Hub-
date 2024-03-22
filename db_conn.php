@@ -93,39 +93,6 @@ if (mysqli_num_rows($resultCheckTableItems) > 0) {
     }
 }
 
-// Check if the "donations" table already exists
-$tableName = "donations";
-$sqlCheckTableDonations = "SHOW TABLES LIKE '$tableName'";
-$resultCheckTableDonations = mysqli_query($conn, $sqlCheckTableDonations);
-
-if (mysqli_num_rows($resultCheckTableDonations) > 0) {
-    echo "Table '$tableName' already exists";
-} else {
-    // Define the SQL query to create the "donations" table
-    $sqlCreateTableDonations = "
-        CREATE TABLE IF NOT EXISTS donations (
-            DonationId INT AUTO_INCREMENT PRIMARY KEY,
-            DonorId INT,
-            CharityId INT NULL,
-            CampaignId INT NULL,
-            Amount INT,
-            PaymentDate DATE,
-            IsSuccess TINYINT,
-            FOREIGN KEY (DonorId) REFERENCES users(Id),
-            FOREIGN KEY (CharityId) REFERENCES charities(CharityId)
-            FOREIGN KEY (CampaignId) REFERENCES campaigns(CampaignId)
-
-        )
-    ";
-
-    // Execute the table creation query
-    if (mysqli_query($conn, $sqlCreateTableDonations)) {
-        echo "Table '$tableName' created successfully";
-    } else {
-        echo "Error creating table: " . mysqli_error($conn);
-    }
-}
-
 $tableName = "campaigns";
 $sqlCheckTableCampaigns = "SHOW TABLES LIKE '$tableName'";
 $resultCheckTableCampaigns = mysqli_query($conn, $sqlCheckTableCampaigns);
@@ -156,6 +123,41 @@ if (mysqli_num_rows($resultCheckTableCampaigns) > 0) {
         echo "Error creating table: " . mysqli_error($conn);
     }
 }
+
+// Check if the "donations" table already exists
+$tableName = "donations";
+$sqlCheckTableDonations = "SHOW TABLES LIKE '$tableName'";
+$resultCheckTableDonations = mysqli_query($conn, $sqlCheckTableDonations);
+
+if (mysqli_num_rows($resultCheckTableDonations) > 0) {
+    echo "Table '$tableName' already exists";
+} else {
+    // Define the SQL query to create the "donations" table
+    $sqlCreateTableDonations = "
+        CREATE TABLE IF NOT EXISTS donations (
+            DonationId INT AUTO_INCREMENT PRIMARY KEY,
+            DonorId INT,
+            CharityId INT NULL,
+            CampaignId INT NULL,
+            Amount INT,
+            PaymentDate DATE,
+            IsSuccess TINYINT,
+            FOREIGN KEY (DonorId) REFERENCES users(Id),
+            FOREIGN KEY (CharityId) REFERENCES charities(CharityId)
+            FOREIGN KEY (`CampaignId`) REFERENCES `campaigns` (`CampaignId`)
+
+        )
+    ";
+
+    // Execute the table creation query
+    if (mysqli_query($conn, $sqlCreateTableDonations)) {
+        echo "Table '$tableName' created successfully";
+    } else {
+        echo "Error creating table: " . mysqli_error($conn);
+    }
+}
+
+
 
 $tableName = "paymentDetails";
 $sqlCheckTablepaymentDetails = "SHOW TABLES LIKE '$tableName'";
