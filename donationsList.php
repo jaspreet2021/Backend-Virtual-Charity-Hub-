@@ -20,7 +20,11 @@ $dbname = "virtual_charity_hub";
     }
 
     // Prepare the SQL statement
-    $sql = "SELECT * FROM donations WHERE DonorId = '$donorId'";
+    $sql = "SELECT donations.*, charities.CharityName AS CharityName, campaigns.CampaignName AS CampaignName 
+            FROM donations 
+            LEFT JOIN charities ON donations.CharityId = charities.CharityId 
+            LEFT JOIN campaigns ON donations.CampaignId = campaigns.CampaignId
+            WHERE donations.DonorId = '$donorId'";
 
     // Execute the SQL statement
     $result = mysqli_query($conn, $sql);

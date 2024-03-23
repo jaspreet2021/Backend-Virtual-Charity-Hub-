@@ -1,4 +1,10 @@
+
+
 <?php
+header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type");
+
 
 // Database configuration
 $servername = "localhost";
@@ -22,7 +28,7 @@ function createUser($conn, $name, $email, $password, $phone, $role)
     $sql = "INSERT INTO users (Name, Email, Password, Phone, Role, EmailVerified, EmailAuthToken) 
             VALUES ('$name', '$email', '$password', '$phone', '$role', '$emailVerified', '$emailAuthToken')";
     if ($conn->query($sql) === TRUE) {
-        return true;
+        return $conn->insert_id;
     } else {
         return false;
     }
@@ -59,7 +65,7 @@ function getUserById($conn, $userId)
 // Function to delete a user by ID
 function deleteUserById($conn, $userId)
 {
-    $sql = "DELETE FROM users WHERE Id= $userId ";
+    $sql = "UPDATE users set IsDeleted=1 WHERE Id= $userId ";
    if ($conn->query($sql) === true) {
          return true;
      } else {
@@ -78,12 +84,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $hashedPassword = hashPassword($password);
 
     $result = createUser($conn, $name, $email,$hashedPassword, $phone, $role);
-    if ($result) {
+    if ($result !== false) {
+        // User creation successful
         header("Content-Type: application/json");
         header("Access-Control-Allow-Origin: http://localhost:4200");
 
-        echo json_encode(array("success" => true, "message" => "User created successfully"));
+        // Return the user ID along with success message
+        echo json_encode(array("success" => true, "userId" => $result, "message" => "User created successfully"));
     } else {
+        // User creation failed
         header("Content-Type: application/json");
         header("Access-Control-Allow-Origin: http://localhost:4200");
 

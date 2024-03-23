@@ -8,12 +8,12 @@ require 'PHPMailer-master/src/SMTP.php';
 
 // Connect to the database
 // Function to create a donation
-function createDonation($donorId, $charityId, $campaignId,$amount, $IsSuccess) {
+function createDonation($donorId, $charityId, $campaignId, $amount, $IsSuccess) {
     // Connect to your database
     $servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "virtual_charity_hub";
+    $username = "root";
+    $password = "";
+    $dbname = "virtual_charity_hub";
 
     $conn = mysqli_connect($servername, $username, $password, $dbname);
 
@@ -21,23 +21,42 @@ $dbname = "virtual_charity_hub";
         die("Connection failed: " . mysqli_connect_error());
     }
     $donorEmail = "";
-    $sql = "SELECT Name,Email FROM users WHERE Id = $donorId";
+    $sql = "SELECT Name, Email FROM users WHERE Id = $donorId";
     $result = mysqli_query($conn, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
         $donorEmail = $row['Email'];
-        $donorName=$row['Name'];
+        $donorName = $row['Name'];
     }
     $paymentDate = date("Y-m-d H:i:s"); // Format: YYYY-MM-DD HH:MM:SS
 
     // Prepare the SQL statement
-    $sql = "INSERT INTO donations (DonorId, CharityId,CampaignId, Amount, PaymentDate, IsSuccess) 
-            VALUES ('$donorId', '$charityId','$campaignId', '$amount', '$paymentDate', 1)";
+    $sql = "INSERT INTO donations (DonorId, CharityId, CampaignId, Amount, PaymentDate, IsSuccess) 
+            VALUES ('$donorId', ";
+
+    // Add the charity id value or NULL if not provided
+    if ($charityId !== "") {
+        $sql .= "'$charityId'";
+    } else {
+        $sql .= "NULL";
+    }
+
+    $sql .= ", ";
+
+    // Add the campaign id value or NULL if not provided
+    if ($campaignId !== "") {
+        $sql .= "'$campaignId'";
+    } else {
+        $sql .= "NULL";
+    }
+
+    $sql .= ", '$amount', '$paymentDate', 1)";
+
     // Execute the SQL statement
     if (mysqli_query($conn, $sql)) {
         mysqli_close($conn);
-        sendDonationNotificationEmail($donorEmail,$donorName,$donorId, $charityId, $campaignId, $amount, $paymentDate); // Send email notification
+        sendDonationNotificationEmail($donorEmail, $donorName, $donorId, $charityId, $campaignId, $amount, $paymentDate); // Send email notification
         return true; // Donation created successfully
     } else {
         mysqli_close($conn);
@@ -81,8 +100,8 @@ function sendDonationNotificationEmail($donorEmail,$donorName,$donorId, $charity
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Get data from the request
     $donorId = $_POST["donorId"];
-    $charityId = isset($_POST["charityId"]) ? $_POST["charityId"] :NULL;
-    $campaignId = isset($_POST["campaignId"]) ? $_POST["campaignId"] :NULL;
+    $charityId = isset($_POST["charityId"]) ? $_POST["charityId"] :"";
+    $campaignId = isset($_POST["campaignId"]) ? $_POST["campaignId"] :"";
     $amount = $_POST["amount"];
     $IsSuccess = $_POST["IsSuccess"];
     $creationResult = createDonation($donorId, $charityId,$campaignId, $amount, $IsSuccess);

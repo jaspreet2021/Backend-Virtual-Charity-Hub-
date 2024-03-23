@@ -1,4 +1,7 @@
 <?php
+header("Access-Control-Allow-Origin: http://localhost:4200");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type");
 
 // Database configuration
 $servername = "localhost";
@@ -69,13 +72,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Call updateUserById with the specified fields
     $result = updateUserById($conn, $userId, $fields);
-    header("Content-Type: application/json");
-    header("Access-Control-Allow-Origin: http://localhost:4200");
 
     if ($result) {
+        header("Content-Type: application/json");
+        header("Access-Control-Allow-Origin: http://localhost:4200");
+    
         
         echo json_encode(array("success" => true, "message" => "User updated successfully"));
     } else {
+
+        header("Content-Type: application/json");
+        header("Access-Control-Allow-Origin: http://localhost:4200");
+    
         echo json_encode(array("success" => false, "message" => "User update failed"));
     }
 }
