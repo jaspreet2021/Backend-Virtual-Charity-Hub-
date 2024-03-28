@@ -55,6 +55,7 @@ function createDonation($donorId, $charityId, $campaignId, $amount, $IsSuccess) 
 
     // Execute the SQL statement
     if (mysqli_query($conn, $sql)) {
+        header("Access-Control-Allow-Origin: http://localhost:4200");
         mysqli_close($conn);
         sendDonationNotificationEmail($donorEmail, $donorName, $donorId, $charityId, $campaignId, $amount, $paymentDate); // Send email notification
         return true; // Donation created successfully

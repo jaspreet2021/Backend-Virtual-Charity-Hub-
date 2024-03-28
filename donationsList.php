@@ -61,7 +61,7 @@ if (isset($_GET['donorId'])) {
         echo json_encode($donations);
     } else {
         // No donations found for the donor
-        echo json_encode(array("message" => "No donations found for the donor with ID: $donorId"));
+        echo json_encode($donations);
     }
 } else {
     header("Content-Type: application/json");

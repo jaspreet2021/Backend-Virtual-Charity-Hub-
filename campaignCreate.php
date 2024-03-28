@@ -34,9 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['CampaignName'], $_POS
 
         if ($conn->query($sql) === TRUE) {
             $campaignId = $conn->insert_id;
-            echo json_encode(['message' => 'Campaign created successfully', 'campaignId' => $campaignId]);
+          header("Access-Control-Allow-Origin: http://localhost:4200");
+          echo json_encode(['message' => 'Campaign created successfully', 'campaignId' => $campaignId]);
         } else {
-            echo json_encode(['error' => 'Error creating campaign: ' . $conn->error]);
+         header("Access-Control-Allow-Origin: http://localhost:4200");
+         echo json_encode(['error' => 'Error creating campaign: ' . $conn->error]);
         }
     } else {
         echo json_encode(['error' => 'Error uploading image']);
