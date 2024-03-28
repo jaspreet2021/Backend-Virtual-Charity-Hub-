@@ -64,7 +64,7 @@ function getEmailContent($conn, $lastInsertedId, $token) {
 
     // Replace placeholders with actual values
     $template = str_replace('[User]', $name, $template);
-    $verificationLink = "http://localhost/virtual_charity_hub/verification.php?id=$lastInsertedId&code=$token";
+    $verificationLink = "http://localhost:8080/Backend-Virtual-Charity-Hub-/verification.php?id=$lastInsertedId&code=$token";
     $template = str_replace('[VerificationLink]', $verificationLink, $template);
 
     return $template;
@@ -175,4 +175,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 // Close the database connection
 mysqli_close($conn);
 
-?>
+?> 

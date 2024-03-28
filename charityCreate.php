@@ -43,8 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['CharityName'], $_POST
 
     if ($conn->query($sql) === TRUE) {
         $charityId = $conn->insert_id;
+       header("Access-Control-Allow-Origin: http://localhost:4200");
         echo json_encode(['message' => 'Charity created successfully', 'charityId' => $charityId]);
     } else {
+        header("Access-Control-Allow-Origin: http://localhost:4200");
         echo json_encode(['error' => 'Error creating charity: ' . $conn->error]);
     }
 } else {
