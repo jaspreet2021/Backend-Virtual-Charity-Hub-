@@ -17,39 +17,66 @@ if ($conn->connect_error) {
 // API endpoint to get the list of campaigns
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    // Initialize the SQL query
-    $sql = "SELECT * FROM campaigns WHERE Isdeleted = 0";
-
-    // Check if status parameter is provided
-    if(isset($_GET['status'])) {
+    // Check if 'id' parameter is provided
+    if(isset($_GET['id'])) {
+        // Get campaign by ID
+        $id = $_GET['id'];
+        
         // Use prepared statement to prevent SQL injection
-        $status = $_GET['status'];
-        $sql .= " AND Status = ?";
-    }
-
-    // Prepare and execute the SQL query
-    $stmt = mysqli_prepare($conn, $sql);
-
-    // Bind parameters if status is provided
-    if(isset($status)) {
-        mysqli_stmt_bind_param($stmt, "s", $status);
-    }
-
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if ($result->num_rows > 0) {
-        $campaigns = array();
-        // Fetch campaigns and store them in an array
-        while ($row = $result->fetch_assoc()) {
-            $campaigns[] = $row;
+        $sql = "SELECT * FROM campaigns WHERE Isdeleted = 0 AND CampaignId = ?";
+        
+        // Prepare and execute the SQL query
+        $stmt = mysqli_prepare($conn, $sql);
+        
+        // Bind parameters
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        
+        if ($result->num_rows > 0) {
+            $campaign = $result->fetch_assoc();
+            header("Access-Control-Allow-Origin: http://localhost:4200");
+            echo json_encode($campaign);
+        } else {
+            header("Access-Control-Allow-Origin: http://localhost:4200");
+            echo json_encode(['error' => 'Campaign not found']);
         }
-        header("Access-Control-Allow-Origin: http://localhost:4200");
-        echo json_encode($campaigns);
     } else {
-        // If no campaigns found, return an empty array
-        header("Access-Control-Allow-Origin: http://localhost:4200");
-        echo json_encode([]);
+        // Initialize the SQL query
+        $sql = "SELECT * FROM campaigns WHERE Isdeleted = 0";
+
+        // Check if status parameter is provided
+        if(isset($_GET['status'])) {
+            // Use prepared statement to prevent SQL injection
+            $status = $_GET['status'];
+            $sql .= " AND Status = ?";
+        }
+
+        // Prepare and execute the SQL query
+        $stmt = mysqli_prepare($conn, $sql);
+
+        // Bind parameters if status is provided
+        if(isset($status)) {
+            mysqli_stmt_bind_param($stmt, "s", $status);
+        }
+
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if ($result->num_rows > 0) {
+            $campaigns = array();
+            // Fetch campaigns and store them in an array
+            while ($row = $result->fetch_assoc()) {
+                $campaigns[] = $row;
+            }
+            header("Access-Control-Allow-Origin: http://localhost:4200");
+            echo json_encode($campaigns);
+        } else {
+            // If no campaigns found, return an empty array
+            header("Access-Control-Allow-Origin: http://localhost:4200");
+            echo json_encode([]);
+        }
     }
 } else {
     header("Access-Control-Allow-Origin: http://localhost:4200");
