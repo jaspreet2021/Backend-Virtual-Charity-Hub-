@@ -25,7 +25,7 @@ function loginUser($conn, $email, $password) {
     $password = sanitizeInput($password);
 
     // Fetch user data from the database based on the provided email
-    $sql = "SELECT * FROM users WHERE Email = '$email'";
+    $sql = "SELECT u.*, c.CharityId FROM users u LEFT JOIN charities c ON u.Id = c.UserId WHERE u.Email = '$email'";
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
