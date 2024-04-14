@@ -19,48 +19,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Initialize the SQL query
     $sql = "SELECT * FROM campaigns WHERE IsDeleted = 0";
 
-    // Check if status parameter is provided
     if(isset($_GET['status'])) {
-        // Use prepared statement to prevent SQL injection
-        $status = $_GET['status'];
-        $sql .= " AND Status = ?";
-    }
+    
+    $status = $_GET['status'];
 
+    $sql = "SELECT * FROM campaigns WHERE IsDeleted = 0 and Status=$status";
+    }
     // Check if id parameter is provided
     if(isset($_GET['id'])) {
         $id = $_GET['id'];
         // Use prepared statement to prevent SQL injection
-        $sql .= " AND CampaignId = ?";
+        $sql = "SELECT * FROM campaigns WHERE IsDeleted = 0 AND Status=$status AND CampaignId = $id";
     }
 
-    // Check if CharityId parameter is provided
     if(isset($_GET['CharityId'])) {
-        $charityId = $_GET['CharityId'];
+        $charityid = $_GET['CharityId'];
         // Use prepared statement to prevent SQL injection
-        $sql .= " AND CharityId = ?";
+        $sql = "SELECT * FROM campaigns WHERE IsDeleted = 0 AND Status=$status AND CharityId = $charityid";
     }
-
-    // Prepare and execute the SQL query
     $stmt = mysqli_prepare($conn, $sql);
-
-    // Bind parameters if status is provided
-    if(isset($status)) {
-        mysqli_stmt_bind_param($stmt, "s", $status);
-    }
-
-    // Bind parameters if id is provided
-    if(isset($id)) {
-        mysqli_stmt_bind_param($stmt, "i", $id);
-    }
-
-    // Bind parameters if CharityId is provided
-    if(isset($charityId)) {
-        mysqli_stmt_bind_param($stmt, "i", $charityId);
-    }
-
+        
+    
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
 
+   
     if ($result->num_rows > 0) {
         $campaigns = array();
         // Fetch campaigns and store them in an array

@@ -37,7 +37,7 @@ function createUser($conn, $name, $email, $password, $phone, $role)
 // Function to retrieve all users
 function getAllUsers($conn)
 {
-    $sql = "SELECT * FROM users";
+    $sql = "SELECT * FROM users where IsDeleted=0";
     $result = $conn->query($sql);
     $users = array();
     if ($result->num_rows > 0) {
