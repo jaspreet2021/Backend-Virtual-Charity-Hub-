@@ -20,6 +20,8 @@
     RewriteRule ^donationList$ donationsList.php [QSA,L]
     RewriteRule ^users$ users.php [QSA,L]
     RewriteRule ^userUpdate$ userUpdate.php [QSA,L]
+    RewriteRule ^createCharge$ createCharge.php [QSA,L]
+
 
 
 
