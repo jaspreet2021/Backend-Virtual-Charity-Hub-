@@ -1,5 +1,5 @@
 <?php
-
+header("Access-Control-Allow-Origin: http://localhost:4200");
 // Replace these values with your MySQL database credentials
 $servername = "localhost";
 $username = "root";
